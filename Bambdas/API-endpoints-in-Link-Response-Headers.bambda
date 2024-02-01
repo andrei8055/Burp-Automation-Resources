@@ -1,0 +1,21 @@
+/*
+* Extract URLs from "Link" response headers and populate the Notes sections
+*/
+
+Set<String> foundURLs = new HashSet<>();
+String notes = "";
+String url = "";
+
+if(requestResponse.response().header("link") != null || requestResponse.response().header("Link") != null){
+    for(HttpHeader header : requestResponse.response().headers()){
+        if(header.name().contains("Link") || header.name().contains("link")){
+            url = header.value();
+            foundURLs.add(url.substring(url.indexOf("<") + 1, url.indexOf(">")));
+            
+        }
+        	
+    }
+    notes = String.join("\n", foundURLs);
+    return true;
+}
+return false;
